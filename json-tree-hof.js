@@ -153,16 +153,15 @@ module.exports = function() {
     };
 
     exports.leaves = leaves;
-    exports.moveUp = moveUp;
-    exports.moveDown = moveDown;
     exports.before = before;
     exports.after = after;
-    exports.mapLists = mapLists;
-    exports.mapNodes = mapNodes;
+    exports.moveUp = moveUp;
+    exports.moveDown = moveDown;
     exports.moveUpById = moveUpById;
     exports.moveDownById = moveDownById;
+    exports.mapLists = mapLists;
+    exports.mapNodes = mapNodes;
     exports.mapToList = mapToList;
-
     return exports;
 };
 
