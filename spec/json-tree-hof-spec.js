@@ -400,4 +400,25 @@ describe("json-tree-hof", function() {
         var result = _.reduce(jth.mapToList(t, getId), function(acc, n) { return acc + n; });
         expect(result).toEqual(406); // sum of ids
     });
+    
+    it("should flatten the tree to a single-level list of the nodes", function() {
+        var t = [{
+            "name": "A",
+        }, {
+            "name": "B",
+            "nodes": [{
+                "name": "C",
+            }, {
+                "name": "D",
+            }]
+        }];
+        
+        expect(jth.flatten(t)).toEqual([
+            { "name" : "A"},
+            { "name" : "B"},
+            { "name" : "C"},
+            { "name" : "D"}
+        ]);
+        
+    });
 });
