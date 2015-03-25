@@ -1,4 +1,5 @@
 // json-tree-hof.js
+
 // Higher order functions for use with a json-tree
 // A json-tree is a list of JSON objects, each of which may optionally
 // have a field called "nodes" which is another such list.
@@ -7,6 +8,7 @@ if (typeof module == 'undefined') {
     module = {};
 }
 
+// assumes that non-require-aware JS must include lodash on its own.
 if (typeof require != 'undefined') {
     var _ = require('lodash');
 }
@@ -39,6 +41,7 @@ module.exports = function() {
         return _.flatten(_.map(x, nodes_helper));
     };
 
+    // Move the first item matching a predicate upward in its containing list.
     // e.g. [1, 2, 3,    999,   4, 5] --> [1,2,999,3,4,5]
     //      |beforeItem |item| after|
     function moveUp (list, pred) {
@@ -50,6 +53,7 @@ module.exports = function() {
         return _.dropRight(beforeItem).concat(item).concat(_.last(beforeItem)).concat(after(list, pred));
     };
 
+    // Move the first item matching a predicate downward in its containing list.
     // e.g. [1, 2, 3,     999,    4, 5   ] --> [1,2,3,4,999,5]
     //      |beforeItem |item| afterItem|
     function moveDown (list, pred) {
@@ -71,7 +75,7 @@ module.exports = function() {
         return _.takeRightWhile(list, _.negate(pred));
     };
 
-    // map a function to all lists of nodes in the tree (and return the resulting tree)
+    // Map a function to all lists of nodes in the tree (and return the resulting tree)
     // f is a function that takes a list as an argument and returns a list
     function mapLists (tree, f) {
         if (!tree || !tree.length || tree.length === 0) {
@@ -86,7 +90,7 @@ module.exports = function() {
         return f(tree);
     };
 
-    // map a function to a node itself and all descendant nodes
+    // Map a function to a node itself and to all descendant nodes
     function mapSelfAndDescendants (f, node) {
         if (node.nodes) {
             node.nodes = _.map(node.nodes, _.partial(mapSelfAndDescendants, f));
@@ -94,7 +98,7 @@ module.exports = function() {
         return f(node);
     };
 
-    // map a function to each node in the tree (and return the resulting tree)
+    // Map a function to each node in the tree (and return the resulting tree)
     // f is a function that takes an object as an argument and returns a node
     function mapNodes (tree, f) {
         return _.map(tree, _.partial(mapSelfAndDescendants, f));
@@ -118,10 +122,12 @@ module.exports = function() {
         };
     };
 
+    // Find the first node having node.id=id and move it up in its containing list.
     function moveUpById (tree, id) {
         return mapLists(tree, moveUpByIdHelper(id));
     };
 
+    // Find the first node having node.id=id and move it down in its containing list.
     function moveDownById (tree, id) {
         return mapLists(tree, moveDownByIdHelper(id));
     };
@@ -136,7 +142,8 @@ module.exports = function() {
         }
     };
 
-    // returns a flat list that is the result of applying function f to every node
+    // Return a flat list that is the result of applying function f to every node.
+    // f is a function that takes a node (JSON object) and returns a node.
     function mapToList (tree, f) {
         var result = [];
         for (var i = 0; i < tree.length; i++) {
