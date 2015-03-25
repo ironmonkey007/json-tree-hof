@@ -1,4 +1,7 @@
-// contentTree.js
+// json-tree-hof.js
+// Higher order functions for use with a json-tree
+// A json-tree is a list of JSON objects, each of which may optionally
+// have a field called "nodes" which is another such list.
 
 if (typeof module == 'undefined') {
     module = {};
