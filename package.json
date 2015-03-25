@@ -1,0 +1,17 @@
+{
+    "name": "json-tree-hof",
+    "version": "1.0.0",
+    "description": "Higher order funtions for JSON tree objects",
+    "main": "contentTree.js",
+    "scripts": {
+        "test": "jasmine"
+    },
+    "dependencies": {
+        "lodash": ">=3.3.1"
+    },
+    "devDependencies": {
+        "jasmine": ">=2.2.1"
+    },
+    "author": "Tom Good",
+    "license": "GPL 2.0"
+}
