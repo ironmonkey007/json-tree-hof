@@ -14,7 +14,7 @@ if (typeof require != 'undefined') {
 // contentTree module
 module.exports = function() {
 
-    var leaves_helper = function(x) {
+    function leaves_helper (x) {
         if (!x.nodes) {
             return x;
         }
@@ -22,12 +22,12 @@ module.exports = function() {
     };
 
     // flatten the tree into a list of the leaves
-    var leaves = function(x) {
+    function leaves (x) {
         return _.flatten(_.map(x, leaves_helper));
     };
 
 
-    var nodes_helper = function(x) {
+    function nodes_helper (x) {
         if (!x.nodes) {
             return x;
         }
@@ -35,13 +35,13 @@ module.exports = function() {
     };
 
     // flatten the tree into a list of all the nodes
-    var nodes = function(x) {
+    function nodes (x) {
         return _.flatten(_.map(x, nodes_helper));
     };
 
     // e.g. [1, 2, 3,    999,   4, 5] --> [1,2,999,3,4,5]
     //      |beforeItem |item| after|
-    var moveUp = function(list, pred) {
+    function moveUp (list, pred) {
         var beforeItem = before(list, pred);
         if (beforeItem.length === 0 || beforeItem.length === list.length) {
             return list;
@@ -52,7 +52,7 @@ module.exports = function() {
 
     // e.g. [1, 2, 3,     999,    4, 5   ] --> [1,2,3,4,999,5]
     //      |beforeItem |item| afterItem|
-    var moveDown = function(list, pred) {
+    function moveDown (list, pred) {
         var afterItem = after(list, pred);
         if (afterItem.length === 0 || afterItem.length == list.length) {
             return list;
@@ -62,18 +62,18 @@ module.exports = function() {
     };
 
     // elements in the list before the first one matching pred
-    var before = function(list, pred) {
+    function before (list, pred) {
         return _.takeWhile(list, _.negate(pred));
     };
 
     // elements in the list after the first one matching pred
-    var after = function(list, pred) {
+    function after (list, pred) {
         return _.takeRightWhile(list, _.negate(pred));
     };
 
     // map a function to all lists of nodes in the tree (and return the resulting tree)
     // f is a function that takes a list as an argument and returns a list
-    var mapLists = function(tree, f) {
+    function mapLists (tree, f) {
         if (!tree || !tree.length || tree.length === 0) {
             return [];
         }
@@ -87,7 +87,7 @@ module.exports = function() {
     };
 
     // map a function to a node itself and all descendant nodes
-    var mapSelfAndDescendants = function(f, node) {
+    function mapSelfAndDescendants (f, node) {
         if (node.nodes) {
             node.nodes = _.map(node.nodes, _.partial(mapSelfAndDescendants, f));
         }
@@ -96,37 +96,37 @@ module.exports = function() {
 
     // map a function to each node in the tree (and return the resulting tree)
     // f is a function that takes an object as an argument and returns a node
-    var mapNodes = function(tree, f) {
+    function mapNodes (tree, f) {
         return _.map(tree, _.partial(mapSelfAndDescendants, f));
     };
 
-    var matchById = function(id) {
+    function matchById (id) {
         return (function(x) {
             return x.id === id;
         });
     };
 
-    var moveUpByIdHelper = function(id) {
+    function moveUpByIdHelper (id) {
         return function(tree) {
             return moveUp(tree, matchById(id));
         };
     };
 
-    var moveDownByIdHelper = function(id) {
+    function moveDownByIdHelper (id) {
         return function(tree) {
             return moveDown(tree, matchById(id));
         };
     };
 
-    var moveUpById = function(tree, id) {
+    function moveUpById (tree, id) {
         return mapLists(tree, moveUpByIdHelper(id));
     };
 
-    var moveDownById = function(tree, id) {
+    function moveDownById (tree, id) {
         return mapLists(tree, moveDownByIdHelper(id));
     };
 
-    var map_helper = function(acc, f, node) {
+    function map_helper (acc, f, node) {
         var result = acc.concat(f(node));
         if (node.nodes) {
             var children = _.map(node.nodes, _.partial(map_helper, acc, f));
@@ -137,7 +137,7 @@ module.exports = function() {
     };
 
     // returns a flat list that is the result of applying function f to every node
-    var mapToList = function(tree, f) {
+    function mapToList (tree, f) {
         var result = [];
         for (var i = 0; i < tree.length; i++) {
             result.push(map_helper([], f, tree[i]));
